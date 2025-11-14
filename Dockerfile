@@ -5,16 +5,16 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
 # کپی فایل پروژه
-COPY ReoNet.api.csproj .
+COPY ReoNet.Api.csproj .
 
 # Restore
-RUN dotnet restore ReoNet.api.csproj
+RUN dotnet restore ReoNet.Api.csproj
 
 # کپی کل پروژه
 COPY . .
 
 # Publish
-RUN dotnet publish ReoNet.api.csproj -c Release -o /app/publish
+RUN dotnet publish ReoNet.Api.csproj -c Release -o /app/publish
 
 # ------------------------------------
 # Stage 2: Runtime
@@ -26,4 +26,4 @@ COPY --from=build /app/publish .
 
 EXPOSE 80
 
-ENTRYPOINT ["dotnet", "ReoNet.api.dll"]
+ENTRYPOINT ["dotnet", "ReoNet.Api.dll"]
