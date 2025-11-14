@@ -1,10 +1,10 @@
-using Microsoft.EntityFrameworkCore;
-using ReoNet.Api.Data;
-using ReoNet.Api.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using ReoNet.Api.Data;
+using ReoNet.Api.Data;
+using ReoNet.Api.Services;
 using ReoNet.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -56,11 +56,11 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "ReoNet API V1");
+});
 
 app.UseHttpsRedirection();
 app.UseAuthorization();
