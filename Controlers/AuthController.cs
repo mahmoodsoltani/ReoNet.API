@@ -48,7 +48,7 @@ namespace ReoNet.Api.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest model)
         {
-            var user = await _authService.LoginAsync(model.Username, model.Password);
+            var user = await _authService.LoginAsync(model.Email, model.Password);
 
             if (user == null)
                 return Unauthorized(new { error = "Invalid credentials" });

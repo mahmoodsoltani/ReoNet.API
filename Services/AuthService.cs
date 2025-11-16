@@ -46,9 +46,9 @@ namespace ReoNet.Api.Services
             return user;
         }
 
-        public async Task<SecUser?> LoginAsync(string username, string password)
+        public async Task<SecUser?> LoginAsync(string email, string password)
         {
-            var user = await _context.SecUsers.FirstOrDefaultAsync(u => u.Username == username);
+            var user = await _context.SecUsers.FirstOrDefaultAsync(u => u.Email == email);
 
             if (user == null || user.Salt == null || user.Password == null)
                 return null;
