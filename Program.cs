@@ -62,6 +62,19 @@ app.UseSwaggerUI(c =>
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "ReoNet API V1");
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(
+        "AllowAll",
+        policy =>
+        {
+            policy
+                .AllowAnyOrigin() // به همه اجازه بده
+                .AllowAnyMethod() // GET, POST, PUT, DELETE, OPTIONS
+                .AllowAnyHeader(); // هر هدر
+        }
+    );
+});
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
