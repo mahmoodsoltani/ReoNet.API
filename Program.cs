@@ -54,14 +54,6 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var app = builder.Build();
-
-app.UseSwagger();
-app.UseSwaggerUI(c =>
-{
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "ReoNet API V1");
-});
-
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(
@@ -75,6 +67,15 @@ builder.Services.AddCors(options =>
         }
     );
 });
+
+var app = builder.Build();
+
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "ReoNet API V1");
+});
+
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
