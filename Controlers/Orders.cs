@@ -14,7 +14,7 @@ public class OrdersController : ControllerBase
         _context = context;
     }
 
-    [HttpGet("   ")]
+    [HttpGet]
     public async Task<IActionResult> GetCustomerOrders([FromQuery] OrderQueryRequest request)
     {
         var query = _context
