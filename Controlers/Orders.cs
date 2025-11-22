@@ -57,4 +57,70 @@ public class OrdersController : ControllerBase
 
         return Ok(orders);
     }
+
+    [HttpGet("orderdetail")]
+    public async Task<IActionResult> GetCustomerOrderDeatilss([FromQuery] OrderQueryRequest request)
+    {
+        var query = _context
+            .ReonetOrderMasters.Include(o => o.OrderDetails)
+            .ThenInclude(d => d.Service)
+            .Include(o => o.OrderDetails)
+            .ThenInclude(d => d.Status)
+            .Where(m => m.SrlCustomer == request.CustomerId)
+            .AsQueryable();
+
+        if (!string.IsNullOrEmpty(request.StartDate))
+            query = query.Where(m => string.Compare(m.OrderDate, request.StartDate) >= 0);
+
+        if (!string.IsNullOrEmpty(request.EndDate))
+            query = query.Where(m => string.Compare(m.OrderDate, request.EndDate) <= 0);
+
+        query = request.SortBy?.ToLower() switch
+        {
+            "totalprice"
+                => request.SortDesc
+                    ? query.OrderByDescending(m => m.TotalPrice)
+                    : query.OrderBy(m => m.TotalPrice),
+            "deliverydate"
+                => request.SortDesc
+                    ? query.OrderByDescending(m => m.DeliveryDate)
+                    : query.OrderBy(m => m.DeliveryDate),
+            "ordernumber"
+                => request.SortDesc
+                    ? query.OrderByDescending(m => m.OrderNumber)
+                    : query.OrderBy(m => m.OrderNumber),
+            _
+                => request.SortDesc
+                    ? query.OrderByDescending(m => m.OrderDate)
+                    : query.OrderBy(m => m.OrderDate),
+        };
+
+        var orders = await query.ToListAsync();
+
+        var flatList = orders
+            .SelectMany(order =>
+                order.OrderDetails.Select(detail => new
+                {
+                    order.Srl,
+                    order.OrderNumber,
+                    order.OrderDate,
+                    order.DeliveryDate,
+
+                    detail.Barcode,
+                    detail.Width,
+                    detail.Length,
+                    detail.Area,
+                    detail.Totalprice,
+                    detail.Discount,
+                    detail.Deliverydate,
+                    detail.Status.Title,
+                    detail.Service.Name,
+                    detail.Price
+
+                })
+            )
+            .ToList();
+
+        return Ok(flatList);
+    }
 }
