@@ -53,7 +53,7 @@ public partial class ReonetOrderDetail
     public ReonetOrderMaster? ReonetMaster { get; set; } // Navigation به Master
 
     [ForeignKey("SrlSubservice")]
-    public ReonetService? Service { get; set; } // Navigation به Service
+    public ReonetServices? Service { get; set; } // Navigation به Service
       [ForeignKey("SrlOrderstatus")]
     public ReonetOrderStatus? Status { get; set; } // Navigation به Service
 }

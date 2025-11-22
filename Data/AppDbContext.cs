@@ -11,7 +11,7 @@ namespace ReoNet.Api.Data
         public DbSet<SecUser> SecUsers { get; set; } = null!;
         public DbSet<ReonetOrderMaster> ReonetOrderMasters { get; set; } = null!;
         public DbSet<ReonetOrderDetail> ReonetOrderDetails { get; set; } = null!;
-        public DbSet<ReonetService> ReonetServices { get; set; } = null!;
+        public DbSet<ReonetServices> ReonetServices { get; set; } = null!;
         public DbSet<ReonetOrderStatus> ReonetOrderStatuses { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -58,10 +58,10 @@ namespace ReoNet.Api.Data
     });
 
             // SubService
-            modelBuilder.Entity<ReonetService>(entity =>
+            modelBuilder.Entity<ReonetServices>(entity =>
             {
                 entity.HasKey(e => e.Srl);
-                entity.ToTable("reonet_Service"); 
+                entity.ToTable("reonet_Services"); 
                 entity.Property(e => e.Name).HasMaxLength(50);
                 entity.Property(e => e.Description).HasMaxLength(500);
             });

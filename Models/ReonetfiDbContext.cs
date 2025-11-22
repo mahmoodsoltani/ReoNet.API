@@ -34,7 +34,7 @@ public partial class ReonetfiDbContext : DbContext
 
     public virtual DbSet<ReonetPostcode> ReonetPostcodes { get; set; }
 
-    public virtual DbSet<ReonetService> ReonetServices { get; set; }
+    public virtual DbSet<ReonetServices> ReonetServices { get; set; }
 
     public virtual DbSet<ReonetServicecategory> ReonetServicecategories { get; set; }
 
@@ -276,7 +276,7 @@ public partial class ReonetfiDbContext : DbContext
             entity.Property(e => e.SrlCity).HasColumnName("srl_city");
         });
 
-        modelBuilder.Entity<ReonetService>(entity =>
+        modelBuilder.Entity<ReonetServices>(entity =>
         {
             entity.HasKey(e => e.Srl);
 

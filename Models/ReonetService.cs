@@ -5,9 +5,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ReoNet.Api.Models;
 
-[Table("reonet_service")]
+[Table("reonet_services")]
 
-public partial class ReonetService
+public partial class ReonetServices
 {
     [Key]
     public int Srl { get; set; }

@@ -75,6 +75,10 @@ public class OrdersController : ControllerBase
         if (!string.IsNullOrEmpty(request.EndDate))
             query = query.Where(m => string.Compare(m.OrderDate, request.EndDate) <= 0);
 
+        query = query.Where(order =>
+            order.OrderDetails.Any(detail => detail.SrlOrderstatus == request.status)
+        );
+
         query = request.SortBy?.ToLower() switch
         {
             "totalprice"
@@ -104,7 +108,6 @@ public class OrdersController : ControllerBase
                     order.Srl,
                     order.OrderNumber,
                     order.OrderDate,
-                    order.DeliveryDate,
 
                     detail.Barcode,
                     detail.Width,
@@ -113,8 +116,8 @@ public class OrdersController : ControllerBase
                     detail.Totalprice,
                     detail.Discount,
                     detail.Deliverydate,
-                    detail.Status.Title,
-                    detail.Service.Name,
+                    detail.Status?.Title,
+                    detail.Service?.Name,
                     detail.Price
 
                 })
