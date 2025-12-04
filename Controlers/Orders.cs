@@ -118,7 +118,9 @@ public class OrdersController : ControllerBase
                     detail.Deliverydate,
                     detail.Status?.Title,
                     detail.Service?.Name,
-                    detail.Price
+                    detail.Price,
+                    detail.Description
+                    
 
                 })
             )
