@@ -13,7 +13,7 @@ namespace ReoNet.Api.Data
         public DbSet<ReonetOrderDetail> ReonetOrderDetails { get; set; } = null!;
         public DbSet<ReonetServices> ReonetServices { get; set; } = null!;
         public DbSet<ReonetOrderStatus> ReonetOrderStatuses { get; set; } = null!;
-
+        public DbSet<ReonetOrderImage> Reonet_OrderImages { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -72,6 +72,37 @@ namespace ReoNet.Api.Data
                 entity.Property(e => e.Title).HasMaxLength(500);
                 entity.Property(e => e.Code).HasMaxLength(50);
             });
+             modelBuilder.Entity<ReonetOrderImage>(entity =>
+        {
+            entity.ToTable("reonet_orderImage");
+
+            entity.HasKey(e => e.Srl);
+
+            entity.Property(e => e.Srl)
+                .HasColumnName("srl");
+
+            entity.Property(e => e.Srl_OrderDetail)
+                .HasColumnName("srl_orderdetail")
+                .IsRequired();
+
+            entity.Property(e => e.Media_Type)
+                .HasColumnName("media_type")
+                .HasMaxLength(10);
+
+            entity.Property(e => e.File_Path)
+                .HasColumnName("file_path")
+                .HasMaxLength(255)
+                .IsRequired();
+
+            entity.Property(e => e.Stage)
+                .HasColumnName("stage")
+                .HasMaxLength(20)
+                .IsRequired();
+
+            entity.Property(e => e.Created_At)
+                .HasColumnName("created_at")
+                .HasDefaultValueSql("GETDATE()");
+        });
         }
     }
 }

@@ -128,4 +128,20 @@ public class OrdersController : ControllerBase
 
         return Ok(flatList);
     }
+
+   [HttpGet("get-srl")]
+public async Task<IActionResult> GetSrlByBarcode([FromQuery] string barcode)
+{
+    if (string.IsNullOrWhiteSpace(barcode))
+        return BadRequest(new { success = false, message = "Barcode is required" });
+
+    var detail = await _context.ReonetOrderDetails
+        .Where(d => d.Barcode == barcode)
+        .FirstOrDefaultAsync();
+
+    if (detail == null)
+        return Ok(new { success = false, srl = -1 });
+
+    return Ok(new { success = true, srl = detail.Srl });
+}
 }
