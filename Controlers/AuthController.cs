@@ -63,7 +63,8 @@ namespace ReoNet.Api.Controllers
                     userId = user.Srl,
                     username = user.Username,
                     email = user.Email,
-                    srl_customer = user.SrlCustomer
+                    srl_customer = user.SrlCustomer,
+                    is_admin = user.IsActive
                 }
             );
         }
