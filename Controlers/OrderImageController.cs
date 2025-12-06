@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 
 [Route("api/[controller]")]
 [ApiController]
-[Authorize]
+
 public class ReonetOrderImageController : ControllerBase
 {
     private readonly AppDbContext _context;

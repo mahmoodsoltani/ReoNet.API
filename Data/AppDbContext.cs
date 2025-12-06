@@ -43,6 +43,11 @@ namespace ReoNet.Api.Data
                     .OnDelete(DeleteBehavior.Cascade);
 
         // OrderDetail - Service relationship
+            modelBuilder.Entity<ReonetOrderDetail>()
+        .HasMany(d => d.Images)
+        .WithOne(i => i.OrderDetail)
+        .HasForeignKey(i => i.Srl_OrderDetail);
+
                 modelBuilder
                     .Entity<ReonetOrderDetail>()
                     .HasOne(d => d.Service)

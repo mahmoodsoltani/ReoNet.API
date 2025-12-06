@@ -56,4 +56,7 @@ public partial class ReonetOrderDetail
     public ReonetServices? Service { get; set; } // Navigation به Service
       [ForeignKey("SrlOrderstatus")]
     public ReonetOrderStatus? Status { get; set; } // Navigation به Service
+        [InverseProperty("OrderDetail")]
+   public virtual ICollection<ReonetOrderImage> Images { get; set; } = new List<ReonetOrderImage>();
+ 
 }

@@ -2,8 +2,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ReoNet.Api.Models;
 using ReoNet.Api.Data;
+using Microsoft.AspNetCore.Authorization;
 
 [ApiController]
+[Authorize]
+
 [Route("api/[controller]")]
 public class OrdersController : ControllerBase
 {
@@ -66,6 +69,8 @@ public class OrdersController : ControllerBase
             .ThenInclude(d => d.Service)
             .Include(o => o.OrderDetails)
             .ThenInclude(d => d.Status)
+             .Include(o => o.OrderDetails)
+        .ThenInclude(d => d.Images)
             .Where(m => m.SrlCustomer == request.CustomerId)
             .AsQueryable();
 
@@ -119,8 +124,14 @@ public class OrdersController : ControllerBase
                     detail.Status?.Title,
                     detail.Service?.Name,
                     detail.Price,
-                    detail.Description
-                    
+                    detail.Description,
+                     Images = detail.Images?.Select(img => new
+                    {
+                        img.File_Path,
+                        img.Stage,
+                        img.Media_Type,
+                        img.Created_At
+                    }).ToList()
 
                 })
             )
@@ -144,4 +155,56 @@ public async Task<IActionResult> GetSrlByBarcode([FromQuery] string barcode)
 
     return Ok(new { success = true, srl = detail.Srl });
 }
+    [HttpGet("get-detail-by-barcode")]
+    public async Task<IActionResult> GetOrderDetailByBarcode([FromQuery] string barcode)
+    {
+        if (string.IsNullOrWhiteSpace(barcode))
+            return BadRequest(new { success = false, message = "Barcode is required" });
+
+        // جستجوی OrderDetail با Service, Status و Images
+        var detail = await _context.ReonetOrderDetails
+            .Include(d => d.Service)
+            .Include(d => d.Status)
+            .Include(d => d.Images)
+            .Include(d => d.ReonetMaster) // در صورت نیاز اطلاعات Master
+            .Where(d => d.Barcode == barcode)
+            .FirstOrDefaultAsync();
+
+        if (detail == null)
+            return NotFound(new { success = false, message = "Order detail not found" });
+
+        // ایجاد خروجی JSON مشابه flatList قبلی
+        var result = new
+        {
+            detail.Srl,
+            detail.Barcode,
+            detail.Width,
+            detail.Length,
+            detail.Area,
+            detail.Totalprice,
+            detail.Discount,
+            detail.Deliverydate,
+            Status = detail.Status?.Title,
+            Service = detail.Service?.Name,
+            detail.Price,
+            detail.Description,
+            Master = detail.ReonetMaster != null ? new
+            {
+                detail.ReonetMaster.Srl,
+                detail.ReonetMaster.OrderNumber,
+                detail.ReonetMaster.OrderDate,
+                detail.ReonetMaster.TotalPrice,
+                detail.ReonetMaster.DeliveryDate
+            } : null,
+            Images = detail.Images?.Select(img => new
+            {
+                img.File_Path,
+                img.Stage,
+                img.Media_Type,
+                img.Created_At
+            }).ToList()
+        };
+
+        return Ok(result);
+    }
 }
