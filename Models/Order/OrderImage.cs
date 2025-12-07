@@ -11,7 +11,8 @@ public class ReonetOrderImage
     public string Media_Type { get; set; }  // image / video
     public string File_Path { get; set; }
     public string Stage { get; set; }       // before / washing / drying / after
-    public DateTime Created_At { get; set; }
+     public string Public_id { get; set; }  
+     public DateTime Created_At { get; set; }
         [ForeignKey("Srl_OrderDetail")]
     public virtual ReonetOrderDetail? OrderDetail { get; set; }
 }

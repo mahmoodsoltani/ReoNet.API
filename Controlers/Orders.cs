@@ -130,7 +130,9 @@ public class OrdersController : ControllerBase
                         img.File_Path,
                         img.Stage,
                         img.Media_Type,
-                        img.Created_At
+                        img.Created_At,
+                        img.Public_id
+
                     }).ToList()
 
                 })
@@ -201,7 +203,8 @@ public async Task<IActionResult> GetSrlByBarcode([FromQuery] string barcode)
                 img.File_Path,
                 img.Stage,
                 img.Media_Type,
-                img.Created_At
+                img.Created_At,
+                img.Public_id
             }).ToList()
         };
 

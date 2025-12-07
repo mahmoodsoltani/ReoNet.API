@@ -103,7 +103,10 @@ namespace ReoNet.Api.Data
                 .HasColumnName("stage")
                 .HasMaxLength(20)
                 .IsRequired();
-
+            entity.Property(e => e.Public_id)
+                .HasColumnName("public_id")
+                .HasMaxLength(255)
+                .IsRequired();
             entity.Property(e => e.Created_At)
                 .HasColumnName("created_at")
                 .HasDefaultValueSql("GETDATE()");
