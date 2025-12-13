@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using ReoNet.Api.Data;
 using ReoNet.Api.Models;
 using Microsoft.AspNetCore.Authorization;
+using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -95,6 +97,44 @@ public class ReonetOrderImageController : ControllerBase
 
         return NoContent();
     }
+[HttpPost("delete-with-cloud")]
+public async Task<IActionResult> DeleteWithCloud(int id)
+{
+    var item = await _context.Reonet_OrderImages.FindAsync(id);
+    if (item == null)
+        return NotFound(new { message = $"Image with id {id} not found." });
+
+    try
+    {
+        // 1) حذف از Cloudinary
+        var account = new Account(
+            "dxxyfc9nm",           
+            "955384321754546",      
+            "ejBFIvkZzWA2WsrfJv5_JVmXcSI"
+        );
+
+        var cloudinary = new Cloudinary(account);
+        var deletionParams = new DeletionParams(item.Public_id);
+
+        var result = cloudinary.Destroy(deletionParams);
+
+        if (result.Result != "ok" && result.Result != "not_found")
+        {
+            return StatusCode(500, new { message = "Cloudinary deletion failed.", details = result.Result });
+        }
+
+        // 2) حذف از دیتابیس
+        _context.Reonet_OrderImages.Remove(item);
+        await _context.SaveChangesAsync();
+
+        return Ok(new { message = "Deleted successfully" });
+    }
+    catch (Exception ex)
+    {
+        // خطاهای غیرمنتظره
+        return StatusCode(500, new { message = "An error occurred while deleting the image.", error = ex.Message });
+    }
+}
 
     // DELETE: api/ReonetOrderImage/byOrderDetail/123
     [HttpDelete("byOrderDetail/{orderDetailId}")]
@@ -112,4 +152,9 @@ public class ReonetOrderImageController : ControllerBase
 
         return NoContent();
     }
+    public class DeleteRequest
+{
+    public int srl { get; set; }
+    public string public_id { get; set; }
+}
 }
