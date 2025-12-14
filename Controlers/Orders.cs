@@ -190,6 +190,7 @@ public async Task<IActionResult> GetSrlByBarcode([FromQuery] string barcode)
             Service = detail.Service?.Name,
             detail.Price,
             detail.Description,
+            detail.SrlOrderstatus,
             Master = detail.ReonetMaster != null ? new
             {
                 detail.ReonetMaster.Srl,
