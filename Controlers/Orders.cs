@@ -5,7 +5,7 @@ using ReoNet.Api.Data;
 using Microsoft.AspNetCore.Authorization;
 
 [ApiController]
-[Authorize]
+// [Authorize]
 
 [Route("api/[controller]")]
 public class OrdersController : ControllerBase
