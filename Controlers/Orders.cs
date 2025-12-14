@@ -127,6 +127,7 @@ public class OrdersController : ControllerBase
                     detail.Description,
                      Images = detail.Images?.Select(img => new
                     {
+                        img.Srl,
                         img.File_Path,
                         img.Stage,
                         img.Media_Type,
