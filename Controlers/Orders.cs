@@ -211,4 +211,42 @@ public async Task<IActionResult> GetSrlByBarcode([FromQuery] string barcode)
 
         return Ok(result);
     }
+     [HttpPost("update-status")]
+    public async Task<IActionResult> UpdateStatus([FromBody] UpdateOrderStatusDto dto)
+    {
+        if (dto == null || dto.Srl <= 0 || dto.StatusId <= 0)
+            return BadRequest(new { message = "Invalid data" });
+
+        // پیدا کردن فرش (OrderDetail)
+        var order = await _context.ReonetOrderDetails
+            .FirstOrDefaultAsync(x => x.Srl == dto.Srl);
+
+        if (order == null)
+            return NotFound(new { message = "Order not found" });
+
+        // بررسی معتبر بودن وضعیت
+        var status = await _context.ReonetOrderStatuses
+            .FirstOrDefaultAsync(x => x.Srl == dto.StatusId);
+
+        if (status == null)
+            return BadRequest(new { message = "Invalid status" });
+
+        // آپدیت وضعیت
+        order.SrlOrderstatus = dto.StatusId;
+
+        await _context.SaveChangesAsync();
+
+        return Ok(new
+        {
+            success = true,
+            statusId = dto.StatusId,
+            statusTitle = status.Title
+        });
+    }
+    public class UpdateOrderStatusDto
+{
+    public int Srl { get; set; }        // Srl_OrderDetail
+    public int StatusId { get; set; }   // Srl وضعیت
+}
+
 }
