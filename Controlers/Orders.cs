@@ -202,6 +202,7 @@ public async Task<IActionResult> GetSrlByBarcode([FromQuery] string barcode)
             } : null,
             Images = detail.Images?.Select(img => new
             {
+                img.Srl,
                 img.File_Path,
                 img.Stage,
                 img.Media_Type,
