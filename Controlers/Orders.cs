@@ -125,6 +125,7 @@ public class OrdersController : ControllerBase
                     detail.Service?.Name,
                     detail.Price,
                     detail.Description,
+                    detail.SrlOrderstatus,
                      Images = detail.Images?.Select(img => new
                     {
                         img.Srl,
